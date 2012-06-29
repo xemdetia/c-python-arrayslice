@@ -27,7 +27,7 @@ int main( int argc, char **argv )
   
   s = Slice.wrap_array( 10, sizeof(double), arr );
   
-  /* Prints '5' */
+  /* Prints '5.0' */
   a = Slice.go( s, "[4]" );
   print_slice( a );
   Slice.clean( a );
@@ -57,7 +57,7 @@ int main( int argc, char **argv )
   print_slice( a );
   Slice.clean( a );
 
-  /* Prints '' */
+  /* Prints '2.0-10.0' */
   a = Slice.go( s, "[1:100]" );
   print_slice( a );
   Slice.clean( a );
@@ -73,22 +73,22 @@ int main( int argc, char **argv )
   Slice.clean( a );
 
 
-  /* Prints 'p' */
+  /* Prints '9.0' */
   a = Slice.go( s, "[-2]" );
   print_slice( a );
   Slice.clean( a );
 
-  /* Prints 'pA' */
+  /* Prints '9.0, 10.0' */
   a = Slice.go( s, "[-2:]" );
   print_slice( a );
   Slice.clean( a );
 
-  /* Prints 'Hel' */
+  /* Prints '1.0-8.0' */
   a = Slice.go( s, "[:-2]" );
   print_slice( a );
   Slice.clean( a );
 
-  /* Prints 'H' */
+  /* Prints '1.0' */
   a = Slice.go( s, "[-0]" );
   print_slice( a );
   Slice.clean( a );
