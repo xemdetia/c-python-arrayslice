@@ -46,21 +46,14 @@ struct arr_slice* get_single_value( struct arr_slice *orig, int targ )
   struct arr_slice *result = NULL;
 
   /* Bad results fall through with result staying NULL */
-  if ( targ > 0 ) {
-      
-    /* Count from end */
-    if ( targ - orig->num >= 0 ) {
+  /* Normalize Targ */
+  if ( targ < 0 ) {
+    targ = targ + orig->num;
+  }
 
-      result = arrslice_wrap_array( 1, orig->size, orig->data + ( targ - orig->num ));
-				    
-    } else {
+  if ( targ >= 0 && targ < orig->num ) {
 
-      /* Count from beginning */
-      if ( targ < orig->num ) {
-
-	result = arrslice_wrap_array( 1, orig->size, orig->data + targ );
-      }
-    }
+    result = arrslice_wrap_array( 1, orig->size, orig->data + (targ * orig->size));
   }
 
   return result;
@@ -79,10 +72,13 @@ struct arr_slice* arrslice_get_array_subset( struct arr_slice* orig, int start, 
     end = orig->num;
   }
 
-  if ( start != end ) {
-    
-    arrslice_wrap_array( end - start, orig->size, orig->data + start );
+  if ( end < start || start > end ) {
+
+    start = end; /* Constrain ourselves */
   }
+
+  result = arrslice_wrap_array( end - start, orig->size, orig->data + (start * orig->size) );
+
   return result;
 }
 
@@ -93,7 +89,7 @@ struct arr_slice* arrslice_slice( struct arr_slice *orig, char *slice )
 {
 
   struct arr_slice *result = NULL;
-  struct start_end se = { -1, -1 };
+  struct start_end se = { 0, 0 };
   char *p = NULL;
   
   /* Check Parameters */
@@ -112,7 +108,31 @@ struct arr_slice* arrslice_slice( struct arr_slice *orig, char *slice )
     }
     
     result = get_single_value( orig, se.start );
-  } 
+  } else {
+
+    if ( sscanf( slice, "[%d:%d]", &se.start, &se.end ) == 2 ) {
+      
+      /* Do Nothing */
+    } else if ( sscanf( slice, "[:%d]", &se.end ) == 1 ) {
+
+      se.start = 0;
+      if ( se.end < 0 ) {
+	
+    	se.end = se.end + orig->num; /* normalize */
+      }
+    } else if ( sscanf( slice, "[%d:]", &se.start ) == 1)  {
+      
+      se.end = orig->num;
+      if ( se.start < 0 ) {
+
+    	se.start = se.end + se.start; /* normalize */
+      }
+    } else {
+      return NULL;
+    }
+
+    result = arrslice_get_array_subset( orig, se.start, se.end );
+  }
 
   return result;
 }
