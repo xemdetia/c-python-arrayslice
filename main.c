@@ -8,7 +8,7 @@ void print_slice( struct arr_slice *s )
   char buff[256] = "";
   
   strncat( buff, s->data, s->num );
-  printf( "%s\n", &buff );
+  printf( "'%s'\n", &buff );
 }
 
 int main( int argc, char **argv )
@@ -49,6 +49,22 @@ int main( int argc, char **argv )
   a = Slice.go( s, "[-1]" );
   print_slice( a );
   Slice.clean( a );
+
+  /* Prints 'elpA' */
+  a = Slice.go( s, "[1:100]" );
+  print_slice( a );
+  Slice.clean( a );
+
+  /* Prints '' */
+  a = Slice.go( s, "[10:]" );
+  print_slice( a );
+  Slice.clean( a );
+
+  /* Prints '' */
+  a = Slice.go( s, "[2:1]" );
+  print_slice( a );
+  Slice.clean( a );
+
 
   /* Prints 'p' */
   a = Slice.go( s, "[-2]" );
