@@ -39,8 +39,34 @@ int main( int argc, char **argv )
   a = Slice.go( s, "[:2]" );
   print_slice( a );
   Slice.clean( a );
+
   /* Prints 'lpA' */
   a = Slice.go( s, "[2:]" );
+  print_slice( a );
+  Slice.clean( a );
+
+  /* Prints 'A' */
+  a = Slice.go( s, "[-1]" );
+  print_slice( a );
+  Slice.clean( a );
+
+  /* Prints 'p' */
+  a = Slice.go( s, "[-2]" );
+  print_slice( a );
+  Slice.clean( a );
+
+  /* Prints 'pA' */
+  a = Slice.go( s, "[-2:]" );
+  print_slice( a );
+  Slice.clean( a );
+
+  /* Prints 'Hel' */
+  a = Slice.go( s, "[:-2]" );
+  print_slice( a );
+  Slice.clean( a );
+
+  /* Prints 'H' */
+  a = Slice.go( s, "[-0]" );
   print_slice( a );
   Slice.clean( a );
 
